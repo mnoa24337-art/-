@@ -156,7 +156,8 @@
   </form> 
   <p id="message"></p>
      </div> 
-       <script>
+<script>
+         
 // ===== 要素取得 =====
 const form = document.getElementById("myForm");
 const msg = document.getElementById("message");
@@ -288,4 +289,4 @@ window.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
-    </html>
+</html>
