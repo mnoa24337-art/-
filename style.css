@@ -178,7 +178,7 @@ button[type="submit"] {
 .product-image {
   display: inline-block;
 
-  width: 100px;
+  width: auto;
   height: 100px;
 
   object-fit: cover;
