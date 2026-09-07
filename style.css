@@ -176,20 +176,15 @@ button[type="submit"] {
 ======================================== */
 
 .product-image {
-  display: inline-block;
-
-  width: auto;
-  height: 200px;
+  width: 70px;
+  height: 70px;
 
   object-fit: cover;
 
   border-radius: 8px;
 
-  margin-left: 10px;
-
-  vertical-align: middle;
+  flex-shrink: 0;
 }
-
 /* ========================================
    商品説明
 ======================================== */
