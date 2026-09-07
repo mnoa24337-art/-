@@ -175,12 +175,9 @@ button[type="submit"] {
    商品写真
 ======================================== */
 
-.product {
-  margin-bottom: 25px;
-}
-
-
 .product-image {
+  display: inline-block;
+
   width: 60px;
   height: 60px;
 
@@ -192,23 +189,6 @@ button[type="submit"] {
 
   vertical-align: middle;
 }
-
-
-.product-description {
-  margin-top: 5px;
-  margin-bottom: 10px;
-
-  line-height: 1.6;
-
-  font-size: 16px;
-}
-
-
-.sold-out {
-  display: block;
-  margin-top: 10px;
-}
-
 
 /* ========================================
    商品説明
