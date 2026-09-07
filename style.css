@@ -178,7 +178,7 @@ button[type="submit"] {
 .product-image {
   display: block;
 
-  width: 220px;
+  width: 100px;
   max-width: 100%;
   height: auto;
 
