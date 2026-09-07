@@ -709,13 +709,14 @@ function createPickupTimes(
 
 function createProducts() {
 
-  productsElement.innerHTML =
-    "";
+  productsElement.innerHTML = "";
 
 
-  if (
-    products.length === 0
-  ) {
+  // ==========================================================
+  // 商品がない場合
+  // ==========================================================
+
+  if (products.length === 0) {
 
     productsElement.textContent =
       "現在、商品がありません。";
@@ -725,33 +726,30 @@ function createProducts() {
   }
 
 
-  const title =
-    document.createElement(
-      "div"
-    );
+  // ==========================================================
+  // タイトル
+  // ==========================================================
 
+  const title =
+    document.createElement("div");
 
   title.textContent =
     "購入数";
-
 
   productsElement.appendChild(
     title
   );
 
 
-  // ========================================================
+  // ==========================================================
   // 商品ごと
-  // ========================================================
+  // ==========================================================
 
   products.forEach(
     (product, index) => {
 
       const wrapper =
-        document.createElement(
-          "div"
-        );
-
+        document.createElement("div");
 
       wrapper.className =
         "product";
@@ -762,65 +760,42 @@ function createProducts() {
       // ======================================================
 
       const label =
-        document.createElement(
-          "label"
-        );
-
+        document.createElement("label");
 
       label.textContent =
         `${product.name}（${product.price.toLocaleString()}円）`;
 
-
       const id =
-        "product_" +
-        index;
-
+        "product_" + index;
 
       label.setAttribute(
         "for",
         id
       );
 
-
       wrapper.appendChild(
         label
       );
 
-
       wrapper.appendChild(
-        document.createElement(
-          "br"
-        )
+        document.createElement("br")
       );
-
-
-
-
-
-    
 
 
       // ======================================================
       // 売り切れ
       // ======================================================
 
-      if (
-        product.soldOut
-      ) {
+      if (product.soldOut) {
 
         const soldOut =
-          document.createElement(
-            "span"
-          );
-
+          document.createElement("span");
 
         soldOut.textContent =
           "現在、注文受付終了";
 
-
         soldOut.style.fontWeight =
           "bold";
-
 
         wrapper.appendChild(
           soldOut
@@ -831,18 +806,25 @@ function createProducts() {
       else {
 
         // ====================================================
+        // 購入数＋写真＋説明
+        // ====================================================
+
+        const quantityRow =
+          document.createElement("div");
+
+        quantityRow.className =
+          "quantity-row";
+
+
+        // ====================================================
         // セレクト
         // ====================================================
 
         const select =
-          document.createElement(
-            "select"
-          );
-
+          document.createElement("select");
 
         select.id =
           id;
-
 
         select.name =
           product.name;
@@ -853,13 +835,11 @@ function createProducts() {
         // ====================================================
 
         let max =
-          Number(
-            product.max
-          ) || 0;
+          Number(product.max) || 0;
 
 
         // ====================================================
-        // 残り注文可能数
+        // 残り注文可能数を反映
         // ====================================================
 
         if (
@@ -870,9 +850,7 @@ function createProducts() {
           max =
             Math.min(
               max,
-              Number(
-                product.remaining
-              )
+              Number(product.remaining)
             );
 
         }
@@ -889,18 +867,13 @@ function createProducts() {
         ) {
 
           const option =
-            document.createElement(
-              "option"
-            );
-
+            document.createElement("option");
 
           option.value =
             i;
 
-
           option.textContent =
             i;
-
 
           select.appendChild(
             option
@@ -909,152 +882,154 @@ function createProducts() {
         }
 
 
-// ====================================================
-// 個
-// ====================================================
+        // ====================================================
+        // 個
+        // ====================================================
 
-const unit =
-  document.createTextNode(
-    " 個"
-  );
+        const unit =
+          document.createTextNode(" 個");
 
-
-
-// ====================================================
-// イベント
-// ====================================================
-
-select.addEventListener(
-  "change",
-  () => {
-
-    calc();
-
-    saveProgress();
-
-  }
-);
-
-
-select.addEventListener(
-  "input",
-  () => {
-
-    calc();
-
-    saveProgress();
-
-  }
-);
-
-
-
-// ====================================================
-// 購入数＋写真
-// ====================================================
-
-const quantityRow =
-  document.createElement(
-    "div"
-  );
-
-quantityRow.className =
-  "quantity-row";
-
-
-
-// ====================================================
-// 購入数
-// ====================================================
-
-quantityRow.appendChild(
-  select
-);
-
-
-
-// ====================================================
-// 個
-// ====================================================
-
-quantityRow.appendChild(
-  unit
-);
-
-
-
-// ====================================================
-// 商品写真
-// ====================================================
-
-if (product.image) {
-
-  const image =
-    document.createElement(
-      "img"
-    );
-
-  image.src =
-    product.image;
-
-  image.alt =
-    product.name;
-
-  image.className =
-    "product-image";
-
-  image.loading =
-    "lazy";
-
-  image.onerror =
-    function() {
-
-      this.style.display =
-        "none";
-
-    };
-
-  quantityRow.appendChild(
-    image
-  );
-
-}
-
-
-
-// ====================================================
-// 商品に追加
-// ====================================================
-
-wrapper.appendChild(
-  quantityRow
-);
 
         // ====================================================
-// 商品説明
-// ====================================================
+        // セレクトのイベント
+        // ====================================================
 
-if (product.description) {
+        select.addEventListener(
+          "change",
+          () => {
 
-  const description =
-    document.createElement(
-      "p"
-    );
+            calc();
 
-  description.textContent =
-    product.description;
+            saveProgress();
 
-  description.className =
-    "product-description";
+          }
+        );
 
-  wrapper.appendChild(
-    description
-  );
 
-}
-        
+        select.addEventListener(
+          "input",
+          () => {
+
+            calc();
+
+            saveProgress();
+
+          }
+        );
+
+
+        // ====================================================
+        // 購入数を追加
+        // ====================================================
+
+        quantityRow.appendChild(
+          select
+        );
+
+        quantityRow.appendChild(
+          unit
+        );
+
+
+        // ====================================================
+        // 写真＋説明
+        // ====================================================
+
+        if (
+          product.image ||
+          product.description
+        ) {
+
+          const imageArea =
+            document.createElement("div");
+
+          imageArea.className =
+            "image-area";
+
+
+          // ==================================================
+          // 商品写真
+          // ==================================================
+
+          if (product.image) {
+
+            const image =
+              document.createElement("img");
+
+            image.src =
+              product.image;
+
+            image.alt =
+              product.name;
+
+            image.className =
+              "product-image";
+
+            image.loading =
+              "lazy";
+
+            image.onerror =
+              function() {
+
+                this.style.display =
+                  "none";
+
+              };
+
+            imageArea.appendChild(
+              image
+            );
+
+          }
+
+
+          // ==================================================
+          // 商品説明
+          // ==================================================
+
+          if (product.description) {
+
+            const description =
+              document.createElement("p");
+
+            description.textContent =
+              product.description;
+
+            description.className =
+              "product-description";
+
+            imageArea.appendChild(
+              description
+            );
+
+          }
+
+
+          // ==================================================
+          // 写真エリアを追加
+          // ==================================================
+
+          quantityRow.appendChild(
+            imageArea
+          );
+
+        }
+
+
+        // ====================================================
+        // 商品に追加
+        // ====================================================
+
+        wrapper.appendChild(
+          quantityRow
+        );
+
       }
 
+
+      // ======================================================
+      // 商品一覧に追加
+      // ======================================================
 
       productsElement.appendChild(
         wrapper
@@ -1062,9 +1037,7 @@ if (product.description) {
 
 
       productsElement.appendChild(
-        document.createElement(
-          "br"
-        )
+        document.createElement("br")
       );
 
     }
