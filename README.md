@@ -793,6 +793,68 @@ function createProducts() {
         )
       );
 
+      // ======================================================
+// 商品写真
+// ======================================================
+
+if (product.image) {
+
+  const image =
+    document.createElement(
+      "img"
+    );
+
+  image.src =
+    product.image;
+
+  image.alt =
+    product.name;
+
+  image.className =
+    "product-image";
+
+  image.loading =
+    "lazy";
+
+  // 画像が読み込めなかった場合
+  image.onerror =
+    function() {
+
+      this.style.display =
+        "none";
+
+    };
+
+  wrapper.appendChild(
+    image
+  );
+
+}
+
+
+// ======================================================
+// 商品説明
+// ======================================================
+
+if (product.description) {
+
+  const description =
+    document.createElement(
+      "p"
+    );
+
+  description.textContent =
+    product.description;
+
+  description.className =
+    "product-description";
+
+  wrapper.appendChild(
+    description
+  );
+
+}
+
 
       // ======================================================
       // 売り切れ
