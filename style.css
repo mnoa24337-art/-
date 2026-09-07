@@ -161,3 +161,60 @@ button[type="submit"] {
     width: auto;
   }
 }
+
+/* ========================================
+   商品
+======================================== */
+
+.product {
+  margin-bottom: 25px;
+}
+
+
+/* ========================================
+   商品写真
+======================================== */
+
+.product-image {
+  display: block;
+
+  width: 220px;
+  max-width: 100%;
+  height: auto;
+
+  margin-top: 10px;
+  margin-bottom: 10px;
+
+  border-radius: 10px;
+
+  object-fit: cover;
+}
+
+
+/* ========================================
+   商品説明
+======================================== */
+
+.product-description {
+
+  margin-top: 5px;
+  margin-bottom: 10px;
+
+  line-height: 1.6;
+
+  font-size: 16px;
+
+}
+
+
+/* ========================================
+   売り切れ
+======================================== */
+
+.sold-out {
+
+  display: block;
+
+  margin-top: 10px;
+
+}
