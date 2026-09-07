@@ -796,28 +796,8 @@ function createProducts() {
 
 
 
-// ======================================================
-// 商品説明
-// ======================================================
 
-if (product.description) {
-
-  const description =
-    document.createElement(
-      "p"
-    );
-
-  description.textContent =
-    product.description;
-
-  description.className =
-    "product-description";
-
-  wrapper.appendChild(
-    description
-  );
-
-}
+    
 
 
       // ======================================================
@@ -1050,6 +1030,29 @@ wrapper.appendChild(
   quantityRow
 );
 
+        // ====================================================
+// 商品説明
+// ====================================================
+
+if (product.description) {
+
+  const description =
+    document.createElement(
+      "p"
+    );
+
+  description.textContent =
+    product.description;
+
+  description.className =
+    "product-description";
+
+  wrapper.appendChild(
+    description
+  );
+
+}
+        
       }
 
 
