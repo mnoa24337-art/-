@@ -443,18 +443,36 @@ function checkEventVersion(
 // ============================================================
 
 function checkOrderPeriod(orderPeriod) {
-
-  // 受付期間情報が取得できなかった場合
   if (!orderPeriod) {
-
-    orderStatusElement.textContent =
-      "受付期間の設定を取得できませんでした。";
-
-    submitButton.disabled =
-      true;
-
+    form.style.display = "none";
+    orderClosedMessage.style.display = "block";
+    orderClosedMessage.textContent =
+      "現在は注文を受け付けていません";
     return false;
   }
+
+  if (orderPeriod.status === "before") {
+    form.style.display = "none";
+    orderClosedMessage.style.display = "block";
+    orderClosedMessage.textContent =
+      "現在は注文を受け付けていません";
+    return false;
+  }
+
+  if (orderPeriod.status === "after") {
+    form.style.display = "none";
+    orderClosedMessage.style.display = "block";
+    orderClosedMessage.textContent =
+      "現在は注文を受け付けていません";
+    return false;
+  }
+
+  // 注文受付中
+  form.style.display = "";
+  orderClosedMessage.style.display = "none";
+
+  return true;
+}
 
 
   // ========================================================
