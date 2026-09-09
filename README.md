@@ -597,77 +597,7 @@ function checkOrderPeriod(orderPeriod) {
   return true;
 }
 
-  // 初回アクセス
-  if (!savedVersion) {
 
-    localStorage.setItem(
-      "eventVersion",
-      String(serverVersion)
-    );
-
-    return;
-
-  }
-
-
-  // ========================================================
-  // イベントが変わった
-  // ========================================================
-
-  if (
-    String(savedVersion) !==
-    String(serverVersion)
-  ) {
-
-    console.log(
-      "新しいイベントを検出しました。"
-    );
-
-
-    // 注文済み解除
-    localStorage.removeItem(
-      "ordered"
-    );
-
-
-    // 保存途中データ削除
-    localStorage.removeItem(
-      "orderData"
-    );
-
-
-    // 古い注文ID削除
-    localStorage.removeItem(
-      "orderId"
-    );
-
-
-    // 新しいイベント番号保存
-    localStorage.setItem(
-      "eventVersion",
-      String(serverVersion)
-    );
-
-
-    // 新しい注文ID発行
-    setOrderId();
-
-
-    // ボタン復活
-    submitButton.disabled =
-      false;
-
-
-    submitButton.textContent =
-      "注文する";
-
-
-    message.textContent =
-      "";
-
-  }
-
-}
 
 
 
