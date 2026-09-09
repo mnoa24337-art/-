@@ -24,6 +24,10 @@
     商品購入フォーム
   </h1>
 
+<div id="orderClosedMessage" style="display: none;">
+  <h2>現在は注文を受け付けていません</h2>
+</div>
+
 
   <form
     id="myForm"
@@ -316,6 +320,12 @@ const productsElement =
   );
 
 
+  const orderClosedMessage = 
+    document.getElementById(
+      "orderClosedMessage"
+    );
+
+
 const result =
   document.getElementById(
     "out"
@@ -428,6 +438,91 @@ function checkEventVersion(
       "eventVersion"
     );
 
+  // ============================================================
+// 注文受付期間チェック
+// ============================================================
+
+function checkOrderPeriod(orderPeriod) {
+
+  // 受付期間情報が取得できなかった場合
+  if (!orderPeriod) {
+
+    orderStatusElement.textContent =
+      "受付期間の設定を取得できませんでした。";
+
+    submitButton.disabled =
+      true;
+
+    return false;
+  }
+
+
+  // ========================================================
+  // 受付開始前
+  // ========================================================
+
+  if (
+    orderPeriod.status ===
+    "before"
+  ) {
+
+    orderStatusElement.textContent =
+      "現在は注文受付開始前です。";
+
+    productsElement.innerHTML =
+      "";
+
+    submitButton.disabled =
+      true;
+
+    submitButton.textContent =
+      "注文受付開始前";
+
+    return false;
+  }
+
+
+  // ========================================================
+  // 受付終了後
+  // ========================================================
+
+  if (
+    orderPeriod.status ===
+    "after"
+  ) {
+
+    orderStatusElement.textContent =
+      "注文受付は終了しました。";
+
+    productsElement.innerHTML =
+      "";
+
+    submitButton.disabled =
+      true;
+
+    submitButton.textContent =
+      "注文受付終了";
+
+    return false;
+  }
+
+
+  // ========================================================
+  // 受付中
+  // ========================================================
+
+  orderStatusElement.textContent =
+    "現在、注文を受け付けています。";
+
+  submitButton.disabled =
+    false;
+
+  submitButton.textContent =
+    "注文する";
+
+  return true;
+
+}
 
   // 初回アクセス
   if (!savedVersion) {
