@@ -434,9 +434,10 @@ function checkEventVersion(serverVersion) {
   const savedVersion =
     localStorage.getItem("eventVersion");
 
-  // ========================================================
+
+  // ==========================================================
   // 初回アクセス
-  // ========================================================
+  // ==========================================================
 
   if (!savedVersion) {
 
@@ -448,9 +449,10 @@ function checkEventVersion(serverVersion) {
     return;
   }
 
-  // ========================================================
+
+  // ==========================================================
   // イベントが変わった
-  // ========================================================
+  // ==========================================================
 
   if (
     String(savedVersion) !==
@@ -461,20 +463,24 @@ function checkEventVersion(serverVersion) {
       "新しいイベントを検出しました。"
     );
 
+
     // 注文済み解除
     localStorage.removeItem(
       "ordered"
     );
+
 
     // 保存途中データ削除
     localStorage.removeItem(
       "orderData"
     );
 
+
     // 古い注文ID削除
     localStorage.removeItem(
       "orderId"
     );
+
 
     // 新しいイベント番号保存
     localStorage.setItem(
@@ -482,30 +488,47 @@ function checkEventVersion(serverVersion) {
       String(serverVersion)
     );
 
+
     // 新しい注文ID発行
     setOrderId();
 
+
     // ボタン復活
-    submitButton.disabled = false;
+    submitButton.disabled =
+      false;
 
     submitButton.textContent =
       "注文する";
 
-    message.textContent = "";
+    message.textContent =
+      "";
   }
+
 }
+
 
 
 // ============================================================
 // 注文受付期間チェック
+//
+// 受付前・受付終了後
+// → フォーム全体を隠す
+// → 「現在は注文を受け付けていません」だけ表示
+//
+// 受付中
+// → フォームを表示
 // ============================================================
 
 function checkOrderPeriod(orderPeriod) {
 
-  // 受付期間を取得できなかった場合
+  // ==========================================================
+  // 受付期間情報を取得できなかった場合
+  // ==========================================================
+
   if (!orderPeriod) {
 
-    form.style.display = "none";
+    form.style.display =
+      "none";
 
     orderClosedMessage.style.display =
       "block";
@@ -520,121 +543,58 @@ function checkOrderPeriod(orderPeriod) {
   // ==========================================================
   // 受付開始前
   // ==========================================================
-
-  if (
-    orderPeriod.status === "before"
-  ) {
-
-    form.style.display = "none";
-
-    orderClosedMessage.style.display =
-      "block";
-
-    orderClosedMessage.textContent =
-      "現在は注文を受け付けていません";
-
-    return false;
-  }
-
-
-  // ==========================================================
-  // 受付終了後
-  // ==========================================================
-
-  if (
-    orderPeriod.status === "after"
-  ) {
-
-    form.style.display = "none";
-
-    orderClosedMessage.style.display =
-      "block";
-
-    orderClosedMessage.textContent =
-      "現在は注文を受け付けていません";
-
-    return false;
-  }
-
-
-  // ==========================================================
-  // 受付中
-  // ==========================================================
-
-  form.style.display = "";
-
-  orderClosedMessage.style.display =
-    "none";
-
-  return true;
-}
-
-
-  // ========================================================
-  // 受付開始前
-  // ========================================================
 
   if (
     orderPeriod.status ===
     "before"
   ) {
 
-    orderStatusElement.textContent =
-      "現在は注文受付開始前です。";
+    form.style.display =
+      "none";
 
-    productsElement.innerHTML =
-      "";
+    orderClosedMessage.style.display =
+      "block";
 
-    submitButton.disabled =
-      true;
-
-    submitButton.textContent =
-      "注文受付開始前";
+    orderClosedMessage.textContent =
+      "現在は注文を受け付けていません";
 
     return false;
   }
 
 
-  // ========================================================
+  // ==========================================================
   // 受付終了後
-  // ========================================================
+  // ==========================================================
 
   if (
     orderPeriod.status ===
     "after"
   ) {
 
-    orderStatusElement.textContent =
-      "注文受付は終了しました。";
+    form.style.display =
+      "none";
 
-    productsElement.innerHTML =
-      "";
+    orderClosedMessage.style.display =
+      "block";
 
-    submitButton.disabled =
-      true;
-
-    submitButton.textContent =
-      "注文受付終了";
+    orderClosedMessage.textContent =
+      "現在は注文を受け付けていません";
 
     return false;
   }
 
 
-  // ========================================================
+  // ==========================================================
   // 受付中
-  // ========================================================
+  // ==========================================================
 
-  orderStatusElement.textContent =
-    "現在、注文を受け付けています。";
+  form.style.display =
+    "";
 
-  submitButton.disabled =
-    false;
-
-  submitButton.textContent =
-    "注文する";
+  orderClosedMessage.style.display =
+    "none";
 
   return true;
-
 }
 
   // 初回アクセス
