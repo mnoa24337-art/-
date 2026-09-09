@@ -46,11 +46,18 @@
       <!-- 商品 -->
       <!-- ================================================= -->
 
-      <div id="products">
+<!-- ================================================= -->
+<!-- 注文受付状態 -->
+<!-- ================================================= -->
 
-        商品情報を読み込んでいます...
+<div id="orderStatus"></div>
 
-      </div>
+
+<div id="products">
+
+  商品情報を読み込んでいます...
+
+</div>
 
 
       <!-- ================================================= -->
@@ -326,6 +333,12 @@ const message =
     "message"
   );
 
+  
+  const orderStatusElement =
+  document.getElementById(
+    "orderStatus"
+  );
+
 
 const submitButton =
   document.getElementById(
@@ -541,6 +554,20 @@ async function loadProducts() {
     checkEventVersion(
       data.eventVersion
     );
+
+
+    // ======================================================
+// 注文受付期間チェック
+// ======================================================
+
+const orderOpen =
+  checkOrderPeriod(
+    data.orderPeriod
+  );
+
+if (!orderOpen) {
+  return;
+}
 
 
     // ======================================================
