@@ -307,44 +307,28 @@ const GAS_URL =
 // ============================================================
 
 const form =
-  document.getElementById(
-    "myForm"
-  );
+  document.getElementById("myForm");
 
 const productsElement =
-  document.getElementById(
-    "products"
-  );
+  document.getElementById("products");
 
 const orderClosedMessage =
-  document.getElementById(
-    "orderClosedMessage"
-  );
+  document.getElementById("orderClosedMessage");
 
 const result =
-  document.getElementById(
-    "out"
-  );
+  document.getElementById("out");
 
 const totalPrice =
-  document.getElementById(
-    "totalPrice"
-  );
+  document.getElementById("totalPrice");
 
 const message =
-  document.getElementById(
-    "message"
-  );
+  document.getElementById("message");
 
 const orderStatusElement =
-  document.getElementById(
-    "orderStatus"
-  );
+  document.getElementById("orderStatus");
 
 const submitButton =
-  document.getElementById(
-    "submitButton"
-  );
+  document.getElementById("submitButton");
 
 
 // ============================================================
@@ -368,9 +352,7 @@ let sending = false;
 function getOrderId() {
 
   let orderId =
-    localStorage.getItem(
-      "orderId"
-    );
+    localStorage.getItem("orderId");
 
   if (!orderId) {
 
@@ -395,35 +377,30 @@ function getOrderId() {
 
 function setOrderId() {
 
-  document.getElementById(
-    "orderId"
-  ).value =
-    getOrderId();
+  const element =
+    document.getElementById("orderId");
+
+  if (element) {
+
+    element.value =
+      getOrderId();
+
+  }
 
 }
 
 
 // ============================================================
 // イベント番号チェック
-//
-// GASのイベント番号が変わった場合
-// → 前回の注文済み状態を解除
-// → 保存データ削除
-// → 新しい注文IDを発行
 // ============================================================
 
 function checkEventVersion(serverVersion) {
 
   const savedVersion =
-    localStorage.getItem(
-      "eventVersion"
-    );
+    localStorage.getItem("eventVersion");
 
 
-  // ==========================================================
   // 初回アクセス
-  // ==========================================================
-
   if (!savedVersion) {
 
     localStorage.setItem(
@@ -436,10 +413,7 @@ function checkEventVersion(serverVersion) {
   }
 
 
-  // ==========================================================
   // イベントが変わった
-  // ==========================================================
-
   if (
     String(savedVersion) !==
     String(serverVersion)
@@ -496,21 +470,11 @@ function checkEventVersion(serverVersion) {
 
 // ============================================================
 // 注文受付期間チェック
-//
-// 受付前・受付終了後
-// → フォーム全体を隠す
-// → 「現在は注文を受け付けていません」だけ表示
-//
-// 受付中
-// → フォームを表示
 // ============================================================
 
 function checkOrderPeriod(orderPeriod) {
 
-  // ==========================================================
-  // 受付期間情報を取得できなかった場合
-  // ==========================================================
-
+  // 受付期間情報なし
   if (!orderPeriod) {
 
     form.style.display =
@@ -520,9 +484,7 @@ function checkOrderPeriod(orderPeriod) {
       "block";
 
     const title =
-      orderClosedMessage.querySelector(
-        "h2"
-      );
+      orderClosedMessage.querySelector("h2");
 
     if (title) {
 
@@ -536,10 +498,7 @@ function checkOrderPeriod(orderPeriod) {
   }
 
 
-  // ==========================================================
   // 受付開始前
-  // ==========================================================
-
   if (
     orderPeriod.status ===
     "before"
@@ -552,9 +511,7 @@ function checkOrderPeriod(orderPeriod) {
       "block";
 
     const title =
-      orderClosedMessage.querySelector(
-        "h2"
-      );
+      orderClosedMessage.querySelector("h2");
 
     if (title) {
 
@@ -568,10 +525,7 @@ function checkOrderPeriod(orderPeriod) {
   }
 
 
-  // ==========================================================
   // 受付終了後
-  // ==========================================================
-
   if (
     orderPeriod.status ===
     "after"
@@ -584,9 +538,7 @@ function checkOrderPeriod(orderPeriod) {
       "block";
 
     const title =
-      orderClosedMessage.querySelector(
-        "h2"
-      );
+      orderClosedMessage.querySelector("h2");
 
     if (title) {
 
@@ -600,10 +552,7 @@ function checkOrderPeriod(orderPeriod) {
   }
 
 
-  // ==========================================================
   // 受付中
-  // ==========================================================
-
   form.style.display =
     "";
 
@@ -631,10 +580,7 @@ async function loadProducts() {
       );
 
 
-    // ========================================================
     // HTTPエラー
-    // ========================================================
-
     if (!response.ok) {
 
       throw new Error(
@@ -644,19 +590,18 @@ async function loadProducts() {
     }
 
 
-    // ========================================================
     // JSON取得
-    // ========================================================
-
     const data =
       await response.json();
-    
 
 
-    // ========================================================
-    // GAS側エラー確認
-    // ========================================================
+    console.log(
+      "GASから取得したデータ：",
+      data
+    );
 
+
+    // GAS側エラー
     if (
       !data ||
       data.result === "error"
@@ -672,10 +617,7 @@ async function loadProducts() {
     }
 
 
-    // ========================================================
     // 商品データ確認
-    // ========================================================
-
     if (
       !Array.isArray(
         data.products
@@ -689,23 +631,18 @@ async function loadProducts() {
     }
 
 
-    // ========================================================
     // イベント番号チェック
-    // ========================================================
-
     checkEventVersion(
       data.eventVersion
     );
 
 
-    // ========================================================
     // 注文受付期間チェック
-    // ========================================================
-
     const orderOpen =
       checkOrderPeriod(
         data.orderPeriod
       );
+
 
     if (!orderOpen) {
 
@@ -714,68 +651,55 @@ async function loadProducts() {
     }
 
 
-    // ========================================================
     // 商品データ
-    // ========================================================
-
     products =
       data.products;
 
 
-    // ========================================================
     // お渡し時間
-    // ========================================================
-
     createPickupTimes(
       data.pickupTimes || []
     );
 
 
-    // ========================================================
     // 商品一覧
-    // ========================================================
-
     createProducts();
 
 
-    // ========================================================
     // 保存データ復元
-    // ========================================================
-
     loadProgress();
 
 
-    // ========================================================
     // 合計計算
-    // ========================================================
-
     calc();
 
 
-    // ========================================================
     // フルネーム
-    // ========================================================
-
     updateFullName();
 
 
-    // ========================================================
     // 注文済みチェック
-    // ========================================================
-
     checkOrdered();
 
   }
- } catch (error) {
-  console.error("商品読み込みエラー:", error);
 
-  productsElement.innerHTML = `
-    <p style="color:red;">
-      商品情報の読み込みに失敗しました。<br>
-      エラー内容：${error.message}
-    </p>
-  `;
-}
+  catch (error) {
+
+    console.error(
+      "商品読み込みエラー：",
+      error
+    );
+
+
+    productsElement.innerHTML =
+      `
+      <p style="color:red;">
+        商品情報の読み込みに失敗しました。<br>
+        エラー内容：${error.message}
+      </p>
+      `;
+
+  }
 
 }
 
@@ -828,10 +752,7 @@ function createPickupTimes(
   );
 
 
-  // ========================================================
   // 時間一覧
-  // ========================================================
-
   pickupTimes.forEach(
     time => {
 
@@ -856,10 +777,7 @@ function createPickupTimes(
   );
 
 
-  // ========================================================
   // 保存
-  // ========================================================
-
   select.onchange =
     () => {
 
@@ -880,10 +798,7 @@ function createProducts() {
     "";
 
 
-  // ==========================================================
   // 商品がない場合
-  // ==========================================================
-
   if (
     products.length === 0
   ) {
@@ -896,10 +811,7 @@ function createProducts() {
   }
 
 
-  // ==========================================================
   // タイトル
-  // ==========================================================
-
   const title =
     document.createElement(
       "div"
@@ -915,10 +827,7 @@ function createProducts() {
   );
 
 
-  // ==========================================================
   // 商品ごと
-  // ==========================================================
-
   products.forEach(
     (product, index) => {
 
@@ -932,10 +841,7 @@ function createProducts() {
         "product";
 
 
-      // ======================================================
       // 商品名
-      // ======================================================
-
       const label =
         document.createElement(
           "label"
@@ -969,10 +875,7 @@ function createProducts() {
       );
 
 
-      // ======================================================
       // 売り切れ
-      // ======================================================
-
       if (
         product.soldOut
       ) {
@@ -1000,10 +903,7 @@ function createProducts() {
 
       else {
 
-        // ====================================================
         // 購入数＋写真＋説明
-        // ====================================================
-
         const quantityRow =
           document.createElement(
             "div"
@@ -1014,10 +914,7 @@ function createProducts() {
           "quantity-row";
 
 
-        // ====================================================
         // セレクト
-        // ====================================================
-
         const select =
           document.createElement(
             "select"
@@ -1032,20 +929,14 @@ function createProducts() {
           product.name;
 
 
-        // ====================================================
         // 1人あたり購入可能数
-        // ====================================================
-
         let max =
           Number(
             product.max
           ) || 0;
 
 
-        // ====================================================
         // 残り注文可能数を反映
-        // ====================================================
-
         if (
           product.remaining !== null &&
           product.remaining !== undefined
@@ -1062,10 +953,7 @@ function createProducts() {
         }
 
 
-        // ====================================================
         // 0～最大数
-        // ====================================================
-
         for (
           let i = 0;
           i <= max;
@@ -1093,20 +981,14 @@ function createProducts() {
         }
 
 
-        // ====================================================
         // 個
-        // ====================================================
-
         const unit =
           document.createTextNode(
             " 個"
           );
 
 
-        // ====================================================
         // セレクトのイベント
-        // ====================================================
-
         select.addEventListener(
           "change",
           () => {
@@ -1131,10 +1013,7 @@ function createProducts() {
         );
 
 
-        // ====================================================
         // 購入数を追加
-        // ====================================================
-
         quantityRow.appendChild(
           select
         );
@@ -1145,10 +1024,7 @@ function createProducts() {
         );
 
 
-        // ====================================================
         // 写真＋説明
-        // ====================================================
-
         if (
           product.image ||
           product.description
@@ -1164,10 +1040,7 @@ function createProducts() {
             "image-area";
 
 
-          // ==================================================
           // 商品写真
-          // ==================================================
-
           if (
             product.image
           ) {
@@ -1210,10 +1083,7 @@ function createProducts() {
           }
 
 
-          // ==================================================
           // 商品説明
-          // ==================================================
-
           if (
             product.description
           ) {
@@ -1239,10 +1109,7 @@ function createProducts() {
           }
 
 
-          // ==================================================
           // 写真エリアを追加
-          // ==================================================
-
           quantityRow.appendChild(
             imageArea
           );
@@ -1250,10 +1117,7 @@ function createProducts() {
         }
 
 
-        // ====================================================
         // 商品に追加
-        // ====================================================
-
         wrapper.appendChild(
           quantityRow
         );
@@ -1261,10 +1125,7 @@ function createProducts() {
       }
 
 
-      // ======================================================
       // 商品一覧に追加
-      // ======================================================
-
       productsElement.appendChild(
         wrapper
       );
@@ -1370,10 +1231,7 @@ function saveProgress() {
   const data = {};
 
 
-  // ========================================================
   // 商品
-  // ========================================================
-
   products.forEach(
     (product, index) => {
 
@@ -1395,10 +1253,7 @@ function saveProgress() {
   );
 
 
-  // ========================================================
   // 名前
-  // ========================================================
-
   data.name =
     document.getElementById(
       "name"
@@ -1411,20 +1266,14 @@ function saveProgress() {
     ).value;
 
 
-  // ========================================================
   // メール
-  // ========================================================
-
   data.email =
     document.getElementById(
       "email"
     ).value;
 
 
-  // ========================================================
   // お渡し時間
-  // ========================================================
-
   const pickupTime =
     document.getElementById(
       "pickupTime"
@@ -1439,20 +1288,14 @@ function saveProgress() {
   }
 
 
-  // ========================================================
   // 同意
-  // ========================================================
-
   data.agree =
     document.getElementById(
       "agree"
     ).checked;
 
 
-  // ========================================================
   // 保存
-  // ========================================================
-
   localStorage.setItem(
     "orderData",
     JSON.stringify(
@@ -1490,10 +1333,7 @@ function loadProgress() {
       );
 
 
-    // ========================================================
     // 商品
-    // ========================================================
-
     products.forEach(
       (product, index) => {
 
@@ -1540,10 +1380,7 @@ function loadProgress() {
     );
 
 
-    // ========================================================
     // 名前
-    // ========================================================
-
     if (
       data.name !==
       undefined
@@ -1570,10 +1407,7 @@ function loadProgress() {
     }
 
 
-    // ========================================================
     // メール
-    // ========================================================
-
     if (
       data.email !==
       undefined
@@ -1587,10 +1421,7 @@ function loadProgress() {
     }
 
 
-    // ========================================================
     // お渡し時間
-    // ========================================================
-
     if (
       data.pickupTime !==
       undefined
@@ -1612,10 +1443,7 @@ function loadProgress() {
     }
 
 
-    // ========================================================
     // 同意
-    // ========================================================
-
     if (
       data.agree !==
       undefined
@@ -1629,6 +1457,7 @@ function loadProgress() {
     }
 
   }
+
   catch (error) {
 
     console.error(
@@ -1674,9 +1503,7 @@ function checkOrdered() {
 // ============================================================
 
 document
-  .getElementById(
-    "name"
-  )
+  .getElementById("name")
   .addEventListener(
     "input",
     () => {
@@ -1690,9 +1517,7 @@ document
 
 
 document
-  .getElementById(
-    "firstname"
-  )
+  .getElementById("firstname")
   .addEventListener(
     "input",
     () => {
@@ -1706,9 +1531,7 @@ document
 
 
 document
-  .getElementById(
-    "email"
-  )
+  .getElementById("email")
   .addEventListener(
     "input",
     () => {
@@ -1720,9 +1543,7 @@ document
 
 
 document
-  .getElementById(
-    "agree"
-  )
+  .getElementById("agree")
   .addEventListener(
     "change",
     () => {
@@ -1744,10 +1565,7 @@ form.addEventListener(
     e.preventDefault();
 
 
-    // ========================================================
     // 二重送信防止
-    // ========================================================
-
     if (sending) {
 
       return;
@@ -1755,19 +1573,13 @@ form.addEventListener(
     }
 
 
-    // ========================================================
     // 更新
-    // ========================================================
-
     updateFullName();
 
     calc();
 
 
-    // ========================================================
     // 入力チェック
-    // ========================================================
-
     if (
       !form.checkValidity()
     ) {
@@ -1779,10 +1591,7 @@ form.addEventListener(
     }
 
 
-    // ========================================================
     // 送信開始
-    // ========================================================
-
     sending =
       true;
 
@@ -1801,20 +1610,14 @@ form.addEventListener(
 
     try {
 
-      // ======================================================
       // FormData
-      // ======================================================
-
       const formData =
         new FormData(
           form
         );
 
 
-      // ======================================================
       // 送信
-      // ======================================================
-
       const response =
         await fetch(
           GAS_URL,
@@ -1841,10 +1644,7 @@ form.addEventListener(
         await response.json();
 
 
-      // ======================================================
       // GAS側エラー
-      // ======================================================
-
       if (
         data.result !==
         "success"
@@ -1858,29 +1658,20 @@ form.addEventListener(
       }
 
 
-      // ======================================================
       // 注文成功
-      // ======================================================
-
       localStorage.setItem(
         "ordered",
         "true"
       );
 
 
-      // ======================================================
       // 注文データ削除
-      // ======================================================
-
       localStorage.removeItem(
         "orderData"
       );
 
 
-      // ======================================================
       // 完了表示
-      // ======================================================
-
       message.textContent =
         "注文が完了しました。ありがとうございます。";
 
@@ -1892,8 +1683,8 @@ form.addEventListener(
       submitButton.textContent =
         "注文済み";
 
-
     }
+
     catch (error) {
 
       console.error(
@@ -1908,10 +1699,7 @@ form.addEventListener(
       );
 
 
-      // ======================================================
       // 送信失敗なら再送信可能
-      // ======================================================
-
       sending =
         false;
 
