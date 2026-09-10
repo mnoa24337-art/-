@@ -227,3 +227,12 @@ button[type="submit"] {
   display: block;
   margin-top: 10px;
 }
+
+
+
+
+
+.product-description {
+  white-space: normal;
+  line-height: 1.6;
+}
