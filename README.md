@@ -650,6 +650,7 @@ async function loadProducts() {
 
     const data =
       await response.json();
+    
 
 
     // ========================================================
@@ -765,17 +766,16 @@ async function loadProducts() {
     checkOrdered();
 
   }
-  catch (error) {
+ } catch (error) {
+  console.error("商品読み込みエラー:", error);
 
-    console.error(
-      "商品情報の読み込みエラー:",
-      error
-    );
-
-    productsElement.textContent =
-      "商品情報の読み込みに失敗しました。";
-
-  }
+  productsElement.innerHTML = `
+    <p style="color:red;">
+      商品情報の読み込みに失敗しました。<br>
+      エラー内容：${error.message}
+    </p>
+  `;
+}
 
 }
 
