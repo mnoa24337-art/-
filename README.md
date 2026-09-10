@@ -1094,8 +1094,11 @@ function createProducts() {
               );
 
 
-            description.textContent =
-              product.description;
+            description.innerHTML =
+  product.description
+    .replace(/\r\n/g, "<br>")
+    .replace(/\n/g, "<br>")
+    .replace(/\r/g, "<br>");
 
 
             description.className =
